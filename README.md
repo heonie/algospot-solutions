@@ -1,0 +1,2 @@
+# algospot-solutions
+Algospot solutions
