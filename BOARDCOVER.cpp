@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int T, t;
@@ -60,7 +61,9 @@ int getCount(int y, int x) {
 
 int main()
 {
+#ifdef _DEBUG
 	freopen("input.txt", "r", stdin);
+#endif
 	cin >> T;
 	for (t = 1; t <= T; t++) {
 		cin >> H >> W;
