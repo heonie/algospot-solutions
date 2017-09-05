@@ -1,78 +1,78 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-int T, t;
 int H, W;
 char map[21][21];
-int blocks[4][3][2] = {
-	{ {0, 0}, {1, 0}, {0, 1} },
-	{ {0, 0}, {1, 0}, {1, 1} },
-	{ {0, 0}, {0, 1}, {1, 1} },
-	{ {0, 0}, {0, 1}, {-1, 1} }
+#define NUM_BLOCKS 4
+bool blocks[NUM_BLOCKS][2][3] = {
+    {   { 0, 1, 1 },
+        { 0, 0, 1 } },
+    
+    {   { 0, 1, 1 },
+        { 0, 1, 0 } },
+    
+    {   { 0, 1, 0 },
+        { 0, 1, 1 } },
+    
+    {   { 0, 1, 0 },
+        { 1, 1, 0 } },
 };
 
-bool test(int y, int x, int type, int delta) {
-	bool ret = true;
-	for (int i = 0; i < 3; i++) {
-		int pX = x + blocks[type][i][0];
-		int pY = y + blocks[type][i][1];
-
-		if (pX < 0 || pX > W - 1 || pY < 0 || pY > H - 1) {
-			ret = false;
-		}
-		else {
-			if (map[pY][pX] != '.') {
-				ret = false;
-			}
-			map[pY][pX] += delta;
-		}
-	}
-	return ret;
+bool setBlock(int cy, int cx, int bi, int inc) {
+    int bx, by;
+    bool conflict = false;
+    for(int y=0; y<2; y++) {
+        for(int x=0; x<3; x++) {
+            if(!blocks[bi][y][x]) continue;
+            bx = (cx-1+x);
+            by = (cy+y);
+            if(bx < 0 || bx >= W || by < 0 || by >= H) {
+                conflict = true;
+                continue;
+            }
+            if(map[by][bx] != '.') {
+                conflict = true;
+            }
+            map[by][bx] += inc;
+        }
+    }
+    return conflict;
 }
 
-int delta = 1;
-int getCount(int y, int x) {
-	int sY, sX;
-	int count = 0;
-	for (sY = y; sY < H; sY++) {
-		for (sX = x; sX < W; sX++) {
-			if (map[sY][sX] == '.') {
-				break;
-			}
-		}
-		if (sX != W) {
-			break;
-		}
-	}
-	if (sY == H && sX == W) {
-		return 1;
-	}
-	for (int type = 0; type < 4; type++) {
-		++delta;
-		if (test(sY, sX, type, delta)) {
-			count += getCount(y, x);
-		}
-		test(sY, sX, type, -delta);
-		--delta;
-	}
-	return count;
+int getCount (int sy, int sx) {
+    int count = 0;
+    for(int y=sy; y<H; y++) {
+        for(int x=(y==sy?sx:0); x<W; x++) {
+            if(map[y][x] == '.') {
+                for(int i=0; i<NUM_BLOCKS; i++) {
+                    if(!setBlock(y, x, i, 1)) {
+                        int nx = x+1;
+                        int ny = y;
+                        if(nx >= W) {
+                            nx = 0;
+                            ny += 1;
+                        }
+                        count += getCount(ny, nx);
+                    }
+                    setBlock(y, x, i, -1);
+                }
+                return count;
+            }
+        }
+    }
+    return 1;
 }
 
-int main()
-{
-#ifdef _DEBUG
-	freopen("input.txt", "r", stdin);
-#endif
-	cin >> T;
-	for (t = 1; t <= T; t++) {
-		cin >> H >> W;
-		for (int y = 0; y < H; ++y) {
-			cin >> map[y];
-		}
-
-		cout << getCount(0, 0) << endl;
-	}
-
-	return 0;
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    int T, t;
+    cin >> T;
+    for(t=1; t<=T; t++) {
+        cin >> H >> W;
+        for(int i=0; i<H; i++) {
+            cin >> map[i];
+        }
+        cout << getCount(0, 0) << endl;
+    }
+    return 0;
 }
