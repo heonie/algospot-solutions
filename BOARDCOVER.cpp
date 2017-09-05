@@ -1,3 +1,4 @@
+// Brute Force
 #include <iostream>
 using namespace std;
 
