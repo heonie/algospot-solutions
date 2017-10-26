@@ -41,7 +41,7 @@ void decideCookTheFood(int food, int count) {
 			eat[p]++;
 		}
 	}
-	decideCookTheFood(food + 1, count+1);
+	decideCookTheFood(food + 1, count + 1);
 	for (int p = 0; p < N; p++) {
 		if (caneat[food][p]) {
 			eat[p]--;
@@ -99,6 +99,48 @@ int solution1() {
 	return minFood;
 }
 
+bool checkCombinations(int remained) {
+	if (remained == 0) {
+		if (everyoneCanEat()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	for (int f = 0; f < M; f++) {
+		if (!cooked[f]) {
+			cooked[f] = true;
+			for (int p = 0; p < N; p++) {
+				if (caneat[f][p]) {
+					eat[p]++;
+				}
+			}
+			if (checkCombinations(remained - 1)) {
+				return true;
+			}
+			for (int p = 0; p < N; p++) {
+				if (caneat[f][p]) {
+					eat[p]--;
+				}
+			}
+			cooked[f] = false;
+		}
+	}
+	return false;
+}
+
+int solution2() {
+	memset(eat, 0, sizeof(int)*N);
+	memset(cooked, false, sizeof(bool)*M);
+	for (int c = 1; c <= M; c++) {
+		if (checkCombinations(c)) {
+			return c;
+		}
+	}
+	return M;
+}
+
 int main() {
 	cin >> T;
 	for (t = 1; t <= T; t++) {
@@ -123,6 +165,7 @@ int main() {
 
 		//cout << solution0() << endl;	// too slow solution which takes exponential time
 		cout << solution1() << endl;
+		//cout << solution2() << endl;  // timeout!
 	}
 	return 0;
 }
