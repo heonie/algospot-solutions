@@ -2,7 +2,6 @@
 #include <iostream>
 using namespace std;
 
-
 string flipHori(string::iterator &head) {
     char ch = *head;
     head++; // pass the 'x', 'w' or 'b'
