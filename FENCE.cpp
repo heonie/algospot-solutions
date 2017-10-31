@@ -43,5 +43,6 @@ int main() {
 		}
 		cout << getMaxArea(0, N-1) << endl;
 	}
+	
 	return 0;
 }
