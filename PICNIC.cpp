@@ -25,7 +25,6 @@ int countPairs () {
 }
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
     int a, b;
     cin >> T;
     for(t=1; t<=T; t++) {
