@@ -68,6 +68,5 @@ int main(int argc, const char * argv[]) {
         solution();
     }
     
-    
     return 0;
 }
